@@ -75,10 +75,7 @@
   </div>
 </section>
 
-<!-- ============ WHAT I DO ============ -->
-<!-- REGENERATE: icon-grid tiles (pick 8-10 tools/skills matching the person's niche, with fitting emoji),
-     the 3 do-bullets (rewrite around their actual work), and the typed headline sentence
-     (edit the data-text="..." attribute below — the JS reads it automatically, no script edit needed). -->
+<!-- ============ SKILLS / WHAT I DO ============ -->
 <section id="skills" class="wrap reveal">
   <div class="skills-grid">
     <div class="skills-art">
@@ -102,26 +99,63 @@
         <circle cx="188" cy="302" r="5" fill="#22C55E"/>
       </svg>
     </div>
+
     <div class="skills-content">
       <div class="eyebrow">What I do</div>
       <p class="headline" id="typeline" data-text="I turn raw data and open research into computer-vision systems, retrieval-augmented AI agents, and generative tools that actually ship."><span id="typetarget"></span><span class="type-caret"></span></p>
-      <div class="icon-grid">
-        <div class="ic-tile"><span class="ic">🐍</span><span class="ic-lbl">Python</span></div>
-        <div class="ic-tile"><span class="ic">🔥</span><span class="ic-lbl">PyTorch</span></div>
-        <div class="ic-tile"><span class="ic">🤗</span><span class="ic-lbl">Transformers</span></div>
-        <div class="ic-tile"><span class="ic">👁️</span><span class="ic-lbl">OpenCV / YOLO</span></div>
-        <div class="ic-tile"><span class="ic">🔗</span><span class="ic-lbl">LangChain</span></div>
-        <div class="ic-tile"><span class="ic">🗄️</span><span class="ic-lbl">Vector DBs</span></div>
-        <div class="ic-tile"><span class="ic">🎨</span><span class="ic-lbl">Stable Diffusion</span></div>
-        <div class="ic-tile"><span class="ic">🐳</span><span class="ic-lbl">Docker</span></div>
-        <div class="ic-tile"><span class="ic">☁️</span><span class="ic-lbl">AWS</span></div>
-        <div class="ic-tile"><span class="ic">🤖</span><span class="ic-lbl">LLM Agents</span></div>
+
+      <div class="layers-container" id="layersContainer">
+        <div class="layer-wrapper" style="--layer-index: 0">
+          <div class="layer" style="--layer-color: hsl(240, 80%, 60%)">
+            <span class="layer-label">🐍 Python</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 1">
+          <div class="layer" style="--layer-color: hsl(250, 75%, 55%)">
+            <span class="layer-label">🔥 PyTorch</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 2">
+          <div class="layer" style="--layer-color: hsl(260, 70%, 50%)">
+            <span class="layer-label">🤗 Transformers</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 3">
+          <div class="layer" style="--layer-color: hsl(270, 65%, 55%)">
+            <span class="layer-label">👁️ OpenCV/YOLO</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 4">
+          <div class="layer" style="--layer-color: hsl(280, 60%, 60%)">
+            <span class="layer-label">🔗 LangChain</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 5">
+          <div class="layer" style="--layer-color: hsl(290, 75%, 50%)">
+            <span class="layer-label">🗄️ Vector DBs</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 6">
+          <div class="layer" style="--layer-color: hsl(300, 70%, 55%)">
+            <span class="layer-label">🎨 Stable Diffusion</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 7">
+          <div class="layer" style="--layer-color: hsl(310, 65%, 50%)">
+            <span class="layer-label">🐳 Docker</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 8">
+          <div class="layer" style="--layer-color: hsl(320, 80%, 55%)">
+            <span class="layer-label">☁️ AWS</span>
+          </div>
+        </div>
+        <div class="layer-wrapper" style="--layer-index: 9">
+          <div class="layer" style="--layer-color: hsl(330, 75%, 60%)">
+            <span class="layer-label">🤖 LLM Agents</span>
+          </div>
+        </div>
       </div>
-      <ul class="do-bullets">
-        <li><span class="b-ic">⚡</span><span>Build and fine-tune <b>computer-vision &amp; deep-learning models</b> — from object detection with YOLO to custom-trained architectures — deployed to solve real business problems.</span></li>
-        <li><span class="b-ic">⚡</span><span>Design <b>agentic RAG systems &amp; LLM-powered apps</b> — grounding language models in real documents and data with retrieval, memory and tool use.</span></li>
-        <li><span class="b-ic">⚡</span><span>Ship <b>generative-AI experiences</b> — from image generation with Stable Diffusion to conversational chatbots — packaged as usable, production-ready tools.</span></li>
-      </ul>
     </div>
   </div>
 </section>
@@ -505,6 +539,59 @@ if(intro){
     if(!reduced) setInterval(tick,700);
   }
 })();
+
+/* ============ LAYERS ANIMATOR ============ */
+class LayersAnimator {
+  constructor() {
+    this.container = document.getElementById('layersContainer');
+    if (!this.container) return;
+
+    this.layers = [...this.container.querySelectorAll('.layer-wrapper')];
+    this.prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.isAnimated = false;
+
+    this.init();
+  }
+
+  init() {
+    if (this.prefersReduced) {
+      this.animateAllLayers();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && !this.isAnimated) {
+          this.animateLayersStaggered();
+          this.isAnimated = true;
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(this.container);
+  }
+
+  animateAllLayers() {
+    this.layers.forEach(layer => {
+      layer.classList.add('layer-visible');
+    });
+  }
+
+  animateLayersStaggered() {
+    this.layers.forEach((layer, index) => {
+      setTimeout(() => {
+        layer.classList.add('layer-visible');
+      }, index * 80);
+    });
+  }
+}
+
+/* ============ INIT ============ */
+document.addEventListener('DOMContentLoaded', () => {
+  new LayersAnimator();
+});
 </script>
 </body>
 </html>
